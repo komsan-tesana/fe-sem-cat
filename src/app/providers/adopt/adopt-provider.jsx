@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdoptContext} from "./adopt-context";
 import { useAuth } from "@/app/providers/auth";
 import { notification } from "antd";
@@ -6,7 +6,17 @@ import { notification } from "antd";
 
 export function AdoptProvider({ children }) {
   const { getCurrentEmail } = useAuth();
-  const [ adoptItems, setAdoptItems] = useState([]);
+  const [ adoptItems, setAdoptItems] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("adoptItems");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+  
+  useEffect(() => {
+    localStorage.setItem("adoptItems", JSON.stringify(adoptItems));
+  }, [adoptItems]);
   
   function addAdopt(cat) {
     const existing = adoptItems.find((item) => item.id === cat.id);

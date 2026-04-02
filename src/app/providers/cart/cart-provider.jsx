@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { CartContext } from "./cart-context";
 import { useAuth } from "@/app/providers/auth";
 import { notification } from "antd";
@@ -6,7 +6,17 @@ import { uniq } from "lodash";
 
 export function CartProvider({ children }) {
   const { getCurrentEmail } = useAuth();
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("cartItems");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = useCallback((productId, donateType, cat) => {
     if (!donateType) {
