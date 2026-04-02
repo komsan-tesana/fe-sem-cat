@@ -752,7 +752,7 @@ body {
 }
 
 .home-section {
-  margin-top: var(--space-2xl);
+  margin-top: 0;
 }
 
 .home-section-header {
@@ -1232,4 +1232,176 @@ body {
 
 .story-info-item .anticon {
   color: #667eea;
+}
+
+/* Parallax Scenes */
+.parallax-scene {
+  transition: transform 0.1s ease-out, opacity 0.3s ease-out;
+  will-change: transform, opacity;
+}
+
+.scene-reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.scene-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Home Background Layer */
+.home-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(135deg, #FFF0F5 0%, #FFE4EC 50%, #FFF5EE 100%);
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-shape {
+  position: absolute;
+  border-radius: 20px;
+}
+
+.bg-shape-1 {
+  width: 180px;
+  height: 180px;
+  background: rgba(255, 182, 193, 0.4);
+  top: 10%;
+  left: -30px;
+  animation: floatShape 8s ease-in-out infinite;
+}
+
+.bg-shape-2 {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 192, 203, 0.35);
+  top: 30%;
+  right: -20px;
+  animation: floatShape 10s ease-in-out infinite reverse;
+}
+
+.bg-shape-3 {
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 218, 185, 0.5);
+  bottom: 20%;
+  left: 10%;
+  animation: floatShape 12s ease-in-out infinite;
+}
+
+.bg-shape-4 {
+  width: 150px;
+  height: 150px;
+  background: rgba(255, 182, 193, 0.3);
+  bottom: 40%;
+  right: 5%;
+  animation: floatShape 9s ease-in-out infinite reverse;
+}
+
+.bg-shape-5 {
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 240, 245, 0.6);
+  top: 50%;
+  left: 30%;
+  animation: floatShape 11s ease-in-out infinite;
+}
+
+@keyframes floatShape {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+}
+
+@media (max-width: 768px) {
+  .bg-shape-1 { width: 100px; height: 100px; }
+  .bg-shape-2 { width: 70px; height: 70px; }
+  .bg-shape-3 { width: 50px; height: 50px; }
+  .bg-shape-4 { width: 80px; height: 80px; }
+  .bg-shape-5 { width: 60px; height: 60px; }
+}
+
+/* Cat Mascot */
+:root {
+  --cat-mascot-size: 120px;
+  --cat-wave-speed: 1s;
+  --cat-slide-speed: 0.8s;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes catWave {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-20deg);
+  }
+  75% {
+    transform: rotate(15deg);
+  }
+}
+
+@keyframes catFloat {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.cat-mascot {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  cursor: pointer;
+  z-index: 1000;
+  transform-origin: bottom center;
+}
+
+.cat-mascot-enter {
+  animation: slideInRight var(--cat-slide-speed) ease-out forwards;
+}
+
+.cat-mascot-float {
+  animation: catFloat 3s ease-in-out infinite;
+}
+
+.cat-paw-wave {
+  transform-origin: 85% 60%;
+  animation: catWave var(--cat-wave-speed) ease-in-out infinite;
+}
+
+.cat-mascot:hover .cat-paw-wave {
+  animation: catWave calc(var(--cat-wave-speed) * 0.7) ease-in-out infinite;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --cat-mascot-size: 80px;
+  }
+  .cat-mascot {
+    bottom: 20px;
+    right: 20px;
+  }
 }

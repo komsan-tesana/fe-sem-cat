@@ -115,6 +115,55 @@ function StatsBar() {
   );
 }
 
+function ParallaxScene({ scrollY, children, className = "" }) {
+  const opacity = Math.max(1 - scrollY / 900, 0);
+  
+  return (
+    <div 
+      className={`parallax-scene ${className}`}
+      style={{ 
+        transform: `translateY(-${scrollY * 0.2}px)`,
+        opacity 
+      }}
+    >
+      {children}  
+    </div>
+  );
+}
+
+function SceneReveal({ threshold = 0.1, children, className = "" }) {
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef(null);
+
+  useEffect(() => {
+    const node = elementRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold }
+    );
+
+    observer.observe(node);
+
+    return () => observer.unobserve(node);
+  }, [threshold]);
+
+  return (
+    <div
+      ref={elementRef}
+      className={`scene-reveal ${isVisible ? "visible" : ""} ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+
 function HowItWorks() {
   const steps = [
     { icon: "🔍", title: "Browse", description: "Explore our lovely cats waiting for a forever home" },
@@ -123,20 +172,18 @@ function HowItWorks() {
   ];
 
   return (
-    <ScrollAnimation>
-      <div className="home-how-it-works">
-        <h2 className="home-section-title">How It Works</h2>
-        <div className="home-steps">
-          {steps.map((step, index) => (
-            <div key={index} className="home-step" style={{ animationDelay: `${index * 150}ms` }}>
-              <div className="home-step-icon">{step.icon}</div>
-              <h3 className="home-step-title">{step.title}</h3>
-              <p className="home-step-desc">{step.description}</p>
-            </div>
-          ))}
-        </div>
+    <div className="home-how-it-works">
+      <h2 className="home-section-title">How It Works</h2>
+      <div className="home-steps">
+        {steps.map((step, index) => (
+          <div key={index} className="home-step" style={{ animationDelay: `${index * 150}ms` }}>
+            <div className="home-step-icon">{step.icon}</div>
+            <h3 className="home-step-title">{step.title}</h3>
+            <p className="home-step-desc">{step.description}</p>
+          </div>
+        ))}
       </div>
-    </ScrollAnimation>
+    </div>
   );
 }
 
@@ -219,6 +266,17 @@ function Hero() {
 }
 
 export function Home() {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const {
     data: catsHero = [],
     isFetching: isHeroLoading,
@@ -232,21 +290,28 @@ export function Home() {
 
   return (
     <div className="page-home">
-      <div className="container">
-        <Hero />
-        <StatsBar />
-        <HowItWorks />
-
-        <div className="home-section">
-          <div className="home-section-header">
-            <h2 className="home-section-title">Meet Our Cats</h2>
-            <Link to="/search">
-              <Button type="link">View All →</Button>
-            </Link>
-          </div>
-          <FeaturedCats cats={catsHero} isLoading={isHeroLoading} />
+     
+      <ParallaxScene scrollY={scrollY}>
+        <div className="container">
+          <Hero />
+          <StatsBar />
+          <HowItWorks />
         </div>
-      </div>
+      </ParallaxScene>
+
+      <SceneReveal threshold={0.1}>
+        <div className="px-8!">
+          <div className="home-section">
+            <div className="home-section-header">
+              <h2 className="home-section-title">Meet Our Cats</h2>
+              <Link to="/search">
+                <Button type="link">View All →</Button>
+              </Link>
+            </div>
+            <FeaturedCats cats={catsHero} isLoading={isHeroLoading} />
+          </div>
+        </div>
+      </SceneReveal>
     </div>
   );
 }

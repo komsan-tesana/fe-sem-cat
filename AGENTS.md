@@ -147,6 +147,12 @@ External APIs used:
 - `https://cataas.com/api/*` - Cat images API
 - Services pass AbortController signal for cancellation
 
+## Agent Skills
+
+- `skill({ name: "frontend-design" })` 
+- `skill({ name: "vercel-react-best-practices" })` 
+
+
 ## Notes
 
 - No TypeScript - project uses plain JavaScript with JSDoc optional
