@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: .
+      args:
+        VITE_API_URL: /api/
+    ports:
+      - "80:80"
+    container_name: fe-sem-cat
+    restart: unless-stopped
+    networks:
+      - be-sem-cat_semcat-network
+
+networks:
+  be-sem-cat_semcat-network:
+    external: true
