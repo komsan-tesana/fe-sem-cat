@@ -27,9 +27,9 @@ export const menuItems = [
         show: true,
       },
       {
-        label: "Add-products",
-        key: "/admin/add-products",
-        show: false,
+        label: "Users",
+        key: "/admin/users",
+        show: true,
       },
     ],
   },

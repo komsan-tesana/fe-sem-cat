@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AuthContext } from "./auth-context";
+import { register, login as loginApi } from "@/app/shared/services/auth-service";
 const ADMIN_EMAIL = import.meta.env.VITE_ADMIN_EMAIL;
 
 export function AuthProvider({ children }) {
@@ -7,36 +8,32 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(currentUser ? { email: currentUser } : null);
   const [admin, setAdmin] = useState(currentUser === ADMIN_EMAIL);
 
-  function signUp(email, password) {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-
-    if (users.find((u) => u.email === email)) {
-      return { success: false, error: "Email already exists" };
+  async function signUp(email, password) {
+    try {
+      const data = await register(email, password);
+      localStorage.setItem("currentUserEmail", email);
+      localStorage.setItem("token", data.token);
+      setUser({ email });
+      isAdmin(getCurrentEmail());
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
     }
-    const newUser = { email, password };
-    users.push(newUser);
-    localStorage.setItem("users", JSON.stringify(users));
-    localStorage.setItem("currentUserEmail", email);
-
-    setUser({ email });
-    isAdmin(getCurrentEmail());
-    return { success: true };
   }
 
-  function login(email, password) {
-    const users = JSON.parse(localStorage.getItem("users") || "[]");
-    const user = users.find(
-      (u) => u.email === email && u.password === password,
-    );
 
-    if (!user) {
-      return { success: false, error: "Invalid email or password" };
+  async function login(email, password) {
+    try {
+      const data = await loginApi(email, password);
+      localStorage.setItem("currentUserEmail", email);
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("role", data.user.role);
+      setUser({ email });
+      isAdmin(getCurrentEmail());
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
     }
-
-    localStorage.setItem("currentUserEmail", email);
-    setUser({ email });
-    isAdmin(getCurrentEmail());
-    return { success: true };
   }
 
   function logout() {

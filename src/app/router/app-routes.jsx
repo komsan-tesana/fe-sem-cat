@@ -1,14 +1,15 @@
 import { Routes, Route, Outlet, Navigate } from "react-router-dom";
+import { Dashboard } from "@/app/features/admin/dashboard/DashBoard";
+import { AdminUsers } from "@/app/features/admin/users/AdminUsers";
 import {
   Home,
   Auth,
   Checkout,
   ProductDetails,
   SearchCat,
-  Dashboard,
   Adopt,
   Favorites,
-  SuccessStories
+  SuccessStories,
 } from "@/app/features";
 import { useAuth } from "@/app/providers/auth";
 
@@ -38,6 +39,7 @@ export function AppRoutes() {
       <Route path="checkout" element={<Checkout />} />
       <Route path="/admin" element={<ProtectedRoute requiredRole="admin" />}>
         <Route path="dash-board" element={<Dashboard />} />
+        <Route path="users" element={<AdminUsers />} />
       </Route>
       <Route path="/products/:id" element={<ProductDetails />} />
     </Routes>

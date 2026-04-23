@@ -7,22 +7,26 @@ import { useNavigate, useLocation } from "react-router-dom";
 export function Auth() {
   const location = useLocation();
   const state = location.state;
-  const initialMode = state?.mode || "signup";
+  const [initialMode, setInitialMode] = useState(state?.mode || "signup");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { signUp, login } = useAuth();
   const [form] = Form.useForm();
 
-  const onSubmit = useCallback((values) => {
+  const onSubmit = useCallback(async (values) => {
     setError(null);
     setLoading(true);
 
     let result;
-    if (initialMode === "signup") {
-      result = signUp(values.email, values.password);
-    } else {
-      result = login(values.email, values.password);
+    try {
+      if (initialMode === "signup") {
+        result = await signUp(values.email, values.password);
+      } else {
+        result = await login(values.email, values.password);
+      }
+    } catch (err) {
+      result = { success: false, error: err.message || "An error occurred" };
     }
 
     setLoading(false);
@@ -38,7 +42,12 @@ export function Auth() {
   const toggleMode = useCallback(() => {
     setError(null);
     form.resetFields();
-  }, [form]);
+    if(initialMode === "signup") {
+      setInitialMode("login");
+    }else{
+      setInitialMode("signup");
+    }
+  }, [form,initialMode]);
 
   const items = [
     {
