@@ -159,3 +159,15 @@ External APIs used:
 - No test framework configured
 - Uses `@faker-js/faker` for mock data
 - Ant Design v6 uses `variant` and `color` props instead of `type`
+
+## page-object-generate
+
+```json
+{
+  "framework": "react",
+  "pagesRoot": "src/app/features",
+  "controlsRoot": "src/app/shared/components",
+  "outputDir": "e2e/page-objects",
+  "selectorProfile": "react-antd"
+}
+```
