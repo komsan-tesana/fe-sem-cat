@@ -1,0 +1,11 @@
+{
+  "skills": {
+    "page-object-generate-v2": {
+      "framework": "react",
+      "pagesRoot": "src/app/features",
+      "controlsRoot": "src/app/shared/components",
+      "outputDir": "e2e/page-objects",
+      "selectorProfile": "react-antd"
+    }
+  }
+}
